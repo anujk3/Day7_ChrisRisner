@@ -44,12 +44,26 @@
     NSURLRequest *theRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:curStr]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy
                                             timeoutInterval:60.0];
-    NSURLConnection *con = [[NSURLConnection alloc]initWithRequest:theRequest delegate:self];
-    if (con) {
-        receivedData = [NSMutableData data];
-    }else{
-        return;
-    }
+//    NSURLConnection *con = [[NSURLConnection alloc]initWithRequest:theRequest delegate:self];
+//    if (con) {
+//        receivedData = [NSMutableData data];
+//    }else{
+//        return;
+//    }
+    
+    [NSURLConnection sendAsynchronousRequest:theRequest queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+        if (connectionError) {
+            //do something with error
+        } else {
+            NSString *responseText = [[NSString alloc] initWithData:data encoding: NSASCIIStringEncoding];
+            NSLog(@"Response: %@", responseText);
+            
+            NSString *newLineStr = @"\n";
+            responseText = [responseText stringByReplacingOccurrencesOfString:@"<br />" withString:newLineStr];
+            [self.lblData setText:responseText];
+        }
+    }];
+    
 }
 
 
