@@ -27,9 +27,15 @@
 }
 
 - (IBAction)btnFetchData1:(id)sender {
-    NSURLRequest *theRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://chrisrisner.com/Labs/day7test.php"]
+    NSString *queryString = [NSString stringWithFormat:@"http://chrisrisner.com/Labs/day7test.php?name=%@", [self.txtName text]];
+    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:queryString]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy
                                             timeoutInterval:60.0];
+    [theRequest setHTTPMethod:@"POST"];
+    NSString *post = [NSString stringWithFormat:@"postedValue=%@", [self.txtName text]];
+    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding];
+    [theRequest setHTTPBody:postData];
+
     NSURLConnection *con = [[NSURLConnection alloc]initWithRequest:theRequest delegate:self];
     if (con){
         receivedData = [NSMutableData data];
