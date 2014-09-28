@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <NSURLConnectionDelegate>
 
+@property (weak, nonatomic) IBOutlet UITextField *txtName;
+@property (weak, nonatomic) IBOutlet UILabel *lblData;
+- (IBAction)btnFetchData1:(id)sender;
+- (IBAction)txtFetchData2:(id)sender;
 
 @end
 
