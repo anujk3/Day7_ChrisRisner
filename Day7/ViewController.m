@@ -27,14 +27,24 @@
 }
 
 - (IBAction)btnFetchData1:(id)sender {
-    NSString *queryString = [NSString stringWithFormat:@"http://chrisrisner.com/Labs/day7test.php?name=%@", [self.txtName text]];
+    NSString *queryString = [NSString stringWithFormat:@"http://chrisrisner.com/Labs/day7test.php"];
+                             
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:queryString]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy
                                             timeoutInterval:60.0];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    @"Value1", @"Key1",
+                                    @"Value2", @"Key2",
+                                    nil];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary
+                                                       options:NSJSONWritingPrettyPrinted error:&error];
     [theRequest setHTTPMethod:@"POST"];
-    NSString *post = [NSString stringWithFormat:@"postedValue=%@", [self.txtName text]];
-    NSData *postData = [post dataUsingEncoding:NSASCIIStringEncoding];
-    [theRequest setHTTPBody:postData];
+    [theRequest addValue:@"application/json" forHTTPHeaderField:@"Content-type"];
+
+    // should check for and handle errors here but we aren't
+    [theRequest setHTTPBody:jsonData];
 
     NSURLConnection *con = [[NSURLConnection alloc]initWithRequest:theRequest delegate:self];
     if (con){
